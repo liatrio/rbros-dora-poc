@@ -2,13 +2,13 @@
   path: /spec/config
   value:
     extensions:
-      health_check: {}
+      # health_check: {}
 
-      pprof:
-        endpoint: 0.0.0.0:1777
+      # pprof:
+      #   endpoint: 0.0.0.0:1777
 
-      zpages:
-        endpoint: 0.0.0.0:55679
+      # zpages:
+      #   endpoint: 0.0.0.0:55679
 
       bearertokenauth/github:
         token: ${env:GH_PAT}
@@ -23,15 +23,16 @@
         scrapers:
           # Default GitHub Scraper Example
           github:
-            github_org: liatrio
-            search_query: org:liatrio topic:o11y archived:false
+            github_org: RBMarketplace
+            #team: delivery-infrastructure
+            search_query: "repo:RBMarketplace/di-documentation"
             auth:
               authenticator: bearertokenauth/github
-            metrics:
-              git.repository.contributor.count:
-                enabled: true
-              git.repository.cve.count:
-                enabled: true
+            # metrics:
+              # git.repository.contributor.count:
+              #   enabled: true
+              # git.repository.cve.count:
+              #   enabled: true
           # GitLab scraper example
           # gitlab:
           #   gitlab_org: liatrioinc/subproject
@@ -58,12 +59,12 @@
           - key: team.name
             # Change this value if you want to associate your scraped repositories
             # with a different team name
-            value: tag-o11y
+            value: delivery-infrastructure
             action: upsert
 
     exporters:
       debug:
-        verbosity: basic
+        verbosity: detailed
         sampling_initial: 2
         sampling_thereafter: 500
 
@@ -74,17 +75,20 @@
 
     service:
       extensions:
-        - health_check
-        - pprof
-        - zpages
+        # - health_check
+        # - pprof
+        # - zpages
         - bearertokenauth/github
+      # telemetry:
+      #   logs:
+      #     level: DEBUG
       pipelines:
         metrics:
           receivers:
             - gitprovider
           processors:
-            - memory_limiter
-            - batch
+            # - memory_limiter
+            # - batch
             - resource/o11y
           exporters:
             - debug
